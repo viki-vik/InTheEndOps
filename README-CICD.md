@@ -1,6 +1,5 @@
-
-CI/CD Blueprint for deploying Python application to EKS using GitHub Actions, ECR, Argo CD, and GitOps principles.
-CI/CD pipeline from Code PR → Deployment in Prod (PR->CI->Dev->Prod)
+## Blueprint for deploying Python application to EKS using GitHub Actions, ECR, Argo CD, and GitOps principles.
+#### CI/CD pipeline from Code PR → Deployment in Prod (PR->CI->Dev->Prod)
 1. Feature Development:
 	- Developers work on a feature in a feature branch.
 	- They write code, unit tests, integration tests, and create a Dockerfile.
