@@ -1,4 +1,4 @@
-## Blueprint for deploying Python application to EKS using GitHub Actions, ECR, Argo CD, and GitOps principles.
+## Blueprint for deploying Python application to EKS using GitHub Actions, ECR, ArgoCD, and GitOps principles.
 #### CI/CD pipeline from Code PR → Deployment in Prod (PR->CI->Dev->Prod)
 1. Feature Development:
 	- Developers work on a feature in a feature branch.
@@ -6,8 +6,8 @@
 	- The feature branch is pushed to GitHub.
 2. Pull Request:
 	- A pull request (PR) is created to merge the feature branch into the Dev branch.
-	- GitHub Actions runs linting and security checks.
-	- If checks fail, developers fixes the issues.
+	- GitHub Actions run linting and security checks.
+	- If checks fail, developers fix the issues.
 	- If checks pass, code review and approval are required.
 	- Once approved, the PR is merged into Dev.
 3. CI Pipeline:
@@ -17,7 +17,7 @@
 	- A Docker image is built and tagged with Dev-TAG or commit SHA.
 	- The image is pushed to ECR.
 4. CD to Development:
-	- ArgoCD syncs the Dev application from the GitOps repository.
+	- If a new image was discovered ArgoCD syncs the Dev application from the GitOps repository.
 	- ArgoCD deploys the application to the EKS Dev environment.
 	- If the deployment fails, ArgoCD rolls back to the previous version and notifies the team via Slack.
 5. Promotion to Production:
