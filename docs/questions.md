@@ -53,7 +53,16 @@
 
 ### Terraform
 
-Running `terraform plan -target 'data.aws_eks_cluster.cluster'` retrieves and displays EKS cluster information without infrastructure changes. Errors occur if the cluster or module output is undefined.
+Running `terraform plan -target 'data.aws_eks_cluster.cluster'` retrieves and displays EKS cluster information without infrastructure changes.    This includes:
+    * Cluster name
+    * ARN (Amazon Resource Name)
+    * Endpoint (the Kubernetes API server endpoint)
+    * Certificate authority data (for connecting to the API server)
+    * Version
+    * Status
+    * VPC configuration
+    * And other AWS-specific settings related to the cluster itself.
+Errors occur if the cluster or module output is undefined.
 
 ### Kubernetes
 
