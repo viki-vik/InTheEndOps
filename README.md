@@ -14,22 +14,13 @@ This repository automates the deployment of a WordPress application with MariaDB
 
 The repository is structured as follows:
 
-├── argocd
-│   └── wordpress-app.yaml
-├── helm-charts
-│   └── wordpress-chart
-│       ├── Chart.yaml
-│       ├── templates
-│       └── values.yaml
-└── terraform
-    ├── ingress.yaml
-    ├── main.tf
-    ├── outputs.tf
-    ├── provider.tf
-    ├── terraform.tfstate
-    ├── terraform.tfstate.backup
-    ├── values.yaml
-    └── variables.tf
+    ├── argocd/               
+    │   ├── wordpress-app.yaml  # Wordpress app manifests
+    ├── docs
+    │   ├── stage1    # CICD
+    │   ├── stage2    # ArgoCD and app screenshots
+    │   └── stage3    # Answers for questionary       
+    └── terraform     # Terraform and Helm files for Argo CD deployment
 
 ## Deployment Steps
 
@@ -44,9 +35,9 @@ Follow these steps to deploy the WordPress application:
 
 #### a. Terraform Setup:
 
-Navigate to the `argocd/terraform` directory:
+Navigate to the `terraform` directory:
 
-    cd argocd/terraform
+    cd terraform
 
 Initialize Terraform and apply the configuration. You may need to adjust the provider configuration to match your setup:
 
@@ -54,34 +45,33 @@ Initialize Terraform and apply the configuration. You may need to adjust the pro
     terraform plan
     terraform apply
 
-#### b. Install Argo CD using Helm:
+### 2. Configure Argo CD
 
-Navigate to the `argocd/helm` directory:
+* **Access ArgoCD:** Determine how to access the Argo CD UI. This usually involves port forwarding:
 
-    cd ../helm
+        kubectl port-forward svc/argocd-server -n argocd 8080:443
 
-Install Argo CD using the Helm chart. You might need to adjust the `values.yaml` file to customize your Argo CD installation.
-
-    helm install argocd . -n argocd --create-namespace
-
-### 3. Configure Argo CD
-
-* **Access Argo CD:** Determine how to access the Argo CD UI. This usually involves port forwarding or using an ingress controller. For Rancher Desktop, Traefik is often used.
 * **Get the Argo CD Admin Password:**
 
-        kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+        kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode
 
-* **Log in to Argo CD:** Use the username `admin` and the password obtained in the previous step to log in to the Argo CD UI.
+* **Log in to Argo CD:** Use the username `admin` and the password obtained in the previous step to log in to the Argo CD UI from `http://localhost:8080`
 
 ### 4. Deploy WordPress and MariaDB
 
-* **Create the Argo CD Application:** Ensure the `argocd-app.yaml` file is correctly configured with your repository URL and path to the `wordpress-mariadb` chart. Then, apply it to your cluster:
+* **Create the Argo CD Application:** Apply to your cluster:
 
-        kubectl apply -n argocd -f argocd-app.yaml
+        cd ../argocd
+        kubectl apply -f wordpress-app.yaml -n argocd
 
 * **Argo CD Sync:** Argo CD will now synchronize the application, deploying WordPress and MariaDB to your Rancher Desktop cluster.
 
+        kubectl get applications -n argocd
+
 ### 5. Access WordPress
 
-* Once the Argo CD application is synced and the WordPress pods are running, you can access WordPress through your browser. Since we are using a `LoadBalancer` service in the WordPress Helm chart, with Rancher Desktop, you can usually access it via `http://localhost`.
+* Once the Argo CD application is synced and the WordPress pods are running, expose Wordpress service:
 
+        kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+you can access WordPress through your browser via `http://localhost`.
