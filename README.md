@@ -1,6 +1,6 @@
 # WordPress Deployment on Rancher Desktop with ArgoCD
 
-This repository automates the deployment of a WordPress application with MariaDB on a local Kubernetes cluster created with Rancher Desktop. It uses ArgoCD for GitOps-style continuous deployment, with ArgoCD deployed using Helm and Terraform.
+This repository automates the deployment of a WordPress application with MariaDB on a local Kubernetes cluster created with Rancher Desktop, Minikube or equivalent. It uses ArgoCD for GitOps-style continuous deployment, with ArgoCD deployed using Helm and Terraform.
 
 ## Prerequisites
 
@@ -54,7 +54,7 @@ Initialize Terraform and apply the configuration. You may need to adjust the pro
 
         kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode
 
-* **Log in to ArgoCD:** Use the username `admin` and the password obtained in the previous step to log in to the ArgoCD UI from `http://localhost:8080`
+* **Log in to ArgoCD:** Use the username `admin` and the password obtained in the previous step to log in to the ArgoCD UI from `https://localhost:8080`
 
 ### 4. Deploy WordPress and MariaDB
 
@@ -69,8 +69,9 @@ Initialize Terraform and apply the configuration. You may need to adjust the pro
 
 ### 5. Access WordPress
 
-* Once the ArgoCD application is synced and the WordPress pods are running, expose Wordpress service:
+* Once the ArgoCD application is synced and the WordPress pods are running, expose Wordpress service and verify:
 
-        kubectl port-forward svc/argocd-server -n argocd 8080:443
+        kubectl port-forward svc/wordpress 8080:80 -n wordpress
+        kubectl get svc -n wordpress -o wide
 
-you can access WordPress through your browser via `http://localhost`.
+Access WordPress through your browser via `http://localhost:8080`.
