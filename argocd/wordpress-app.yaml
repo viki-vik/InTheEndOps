@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wordpress
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 17.0.0  # Change to latest version
+    chart: wordpress
+    helm:
+      values: |
+        mariadb:
+          enabled: true
+          auth:
+            rootPassword: "rootpass123"
+            database: "wordpress"
+            username: "wpuser"
+            password: "wppass123"
+        wordpressUsername: "admin"
+        wordpressPassword: "adminpass123"
+        service:
+          type: LoadBalancer
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: wordpress
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
