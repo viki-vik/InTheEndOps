@@ -2,7 +2,7 @@
 
 1.  **How to reduce EKS cluster costs:**
 
-    * Right-size nodes & pods.
+    * Right-size nodes.
     * Use Spot Instances (node_lifecycle=spot, only for required: node_lifecycle=od).
     * Autoscaling (nodes & pods).
     * Optimize storage classes.
@@ -14,7 +14,7 @@
 
     * Implement tagging and use cost tools (AWS Cost Explorer, Budgets).
     * Auto Scaling.
-    * Right-sizing (db/ebs storages, nodes & pods).
+    * Right-sizing (db/ebs storages, nodes).
     * Systematically remove unused resources.
 
 
