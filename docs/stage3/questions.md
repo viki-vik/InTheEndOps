@@ -3,7 +3,7 @@
 1.  **How to reduce EKS cluster costs:**
 
     * Right-size nodes.
-    * Use Spot Instances (lifecycle=spot, only for required lifecycle=od).
+    * Use Spot Instances (node_lifecycle=spot, only for required: node_lifecycle=od).
     * Autoscaling (nodes & pods).
     * Optimize storage classes.
     * Remove unused resources.
@@ -28,11 +28,11 @@
         * Right-size instances.
         * Use Reserved Instances/Savings Plans for steady workloads.
         * Evaluate Multi-AZ necessity.
-        * Schedule off-hour shutdowns.
+        * Schedule off-hour shutdowns if possible.
     * **`EU-BoxUsage:c5.large` (EC2):**
         * Right-sizing.
         * Explore newer instance types (`c6i`, `c7g`, Graviton).
-        * Spot Instances (non-critical).
+        * Use Spot Instances.
         * Reserved Instances/Savings Plans (long-term).
         * Auto Scaling.
         * Scheduled Instances (predictable on/off).
@@ -40,7 +40,6 @@
         * Terminate unused instances.
     * **`EU-Natgateway-Hours` (NAT Gateway):**
         * Use VPC endpoints.
-        * Minimize data transfer.
         * Carefully consider NAT instances.
     * **`EU-PaidKubernetesAuditLogsAnalyzed` (EKS Audit Logs):**
         * Filter audit logs.
@@ -53,22 +52,23 @@
 
 ### Terraform
 
-Running `terraform plan -target 'data.aws_eks_cluster.cluster'` retrieves and displays EKS cluster information. This includes:
-    ** Cluster name
-    ** ARN (Amazon Resource Name)
-    ** Endpoint (the Kubernetes API server endpoint)
-    ** Certificate authority data (for connecting to the API server)
-    ** Version
-    ** Status
-    ** VPC configuration
-    ** And other AWS-specific settings related to the cluster itself.
-Errors occur if the cluster or module output is undefined.
+**Running `terraform plan -target 'data.aws_eks_cluster.cluster'` retrieves and displays EKS cluster information. This includes:**
+
+    * Cluster name
+    * ARN (Amazon Resource Name)
+    * Endpoint (the Kubernetes API server endpoint)
+    * Certificate authority data (for connecting to the API server)
+    * Version
+    * Status
+    * VPC configuration and other AWS-specific settings related to the cluster itself.
+    Errors occur if the cluster or module output is undefined.
 
 ### Kubernetes
 
 **External Secrets Operator (ESO)**
 
-ESO bridges Kubernetes and external secret management systems, automating secret fetching and synchronization.
+ESO bridges Kubernetes and external secret management systems, automating secret fetching and synchronization. Every application has important passwords, keys and other sensitive data and Kubernetes needs these secrets to let the apps run, but we don't want to store them directly inside Kubernetes for security reasons. So we can use ESO and tell where the vault is (e.g., AWS Secrets Manager, HashiCorp Vault). ESO goes to the vault, gets the secrets, and puts a copy of those secrets into Kubernetes in a safe way. Also, ESO keeps an eye on the vault, and if a password was changed, ESO will update it in Kubernetes too.
+
 
 **Benefits:**
 
