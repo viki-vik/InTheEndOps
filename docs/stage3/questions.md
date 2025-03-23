@@ -2,7 +2,7 @@
 
 1.  **How to reduce EKS cluster costs:**
 
-    * Right-size nodes.
+    * Right-size nodes & pods.
     * Use Spot Instances (node_lifecycle=spot, only for required: node_lifecycle=od).
     * Autoscaling (nodes & pods).
     * Optimize storage classes.
@@ -52,16 +52,7 @@
 
 ### Terraform
 
-**Running `terraform plan -target 'data.aws_eks_cluster.cluster'` retrieves and displays EKS cluster information. This includes:**
-
-    * Cluster name
-    * ARN (Amazon Resource Name)
-    * Endpoint (the Kubernetes API server endpoint)
-    * Certificate authority data (for connecting to the API server)
-    * Version
-    * Status
-    * VPC configuration and other AWS-specific settings related to the cluster itself.
-    Errors occur if the cluster or module output is undefined.
+**Running `terraform plan` on 'data.aws_eks_cluster.cluster' retrieves and displays EKS cluster name. Errors occur if the cluster or module output is undefined.
 
 ### Kubernetes
 
