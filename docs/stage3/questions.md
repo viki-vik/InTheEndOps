@@ -4,7 +4,7 @@
 
     * Right-size nodes.
     * Use Spot Instances (node_lifecycle=spot, only for required: node_lifecycle=od).
-    * Autoscaling (nodes & pods).
+    * Autoscaling (nodes & pods, databases).
     * Optimize storage classes.
     * Remove unused resources.
 
